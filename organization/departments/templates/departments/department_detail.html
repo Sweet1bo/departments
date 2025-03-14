@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department.name }} - Сотрудники{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'departments:index' %}">Главная</a></li>
+        <li class="breadcrumb-item active">{{ department.name }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ department.name }}</h1>
+    <a href="{% url 'departments:index' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Вернуться к структуре
+    </a>
+</div>
+
+{% if department.parent %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Родительский отдел: 
+    <a href="{% url 'departments:department_detail' department.parent.id %}">
+        {{ department.parent.name }}
+    </a>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Сотрудники отдела (всего: {{ page_obj.paginator.count }})</h5>
+    </div>
+    <div class="card-body">
+        {% if page_obj %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                            <th>Дата приема на работу</th>
+                            <th>Зарплата</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in page_obj %}
+                        <tr>
+                            <td>{{ employee.full_name }}</td>
+                            <td>{{ employee.position }}</td>
+                            <td>{{ employee.hire_date|date:"d.m.Y" }}</td>
+                            <td>{{ employee.salary }} руб.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if page_obj.paginator.num_pages > 1 %}
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; Первая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-warning">
+                В этом отделе нет сотрудников.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if not department.is_leaf_node %}
+<div class="card mt-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Подотделы</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for child in department.get_children %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ child.name }}
+                <a href="{% url 'departments:department_detail' child.id %}" class="btn btn-sm btn-outline-primary">
+                    Перейти к отделу
+                </a>
+            </li>
+            {% empty %}
+            <li class="list-group-item">Нет подотделов</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<div class="card mt-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">API доступ</h5>
+    </div>
+    <div class="card-body">
+        <p>API этого отдела доступен по ссылке:</p>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" value="/api/departments/{{ department.id }}/" readonly>
+            <a href="/api/departments/{{ department.id }}/" target="_blank" class="btn btn-outline-primary">Открыть API</a>
+        </div>
+        <p>API сотрудников этого отдела:</p>
+        <div class="input-group">
+            <input type="text" class="form-control" value="/api/employees/?department={{ department.id }}" readonly>
+            <a href="/api/employees/?department={{ department.id }}" target="_blank" class="btn btn-outline-primary">Открыть API</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

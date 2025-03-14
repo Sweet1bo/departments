@@ -1,0 +1,50 @@
+/* Стили для древовидной структуры отделов */
+.department-tree ul {
+    list-style-type: none;
+    padding-left: 1.5rem;
+}
+
+.department-tree li {
+    margin-bottom: 0.5rem;
+}
+
+.toggle-icon {
+    cursor: pointer;
+    margin-right: 0.5rem;
+    width: 1rem;
+    text-align: center;
+}
+
+.department-name {
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+.collapsed {
+    display: none;
+}
+
+/* Стили для таблицы сотрудников */
+.table th {
+    position: sticky;
+    top: 0;
+    background-color: #212529;
+    z-index: 1;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 767.98px) {
+    .department-tree ul {
+        padding-left: 1rem;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .d-flex.justify-content-between .btn {
+        margin-top: 1rem;
+        width: 100%;
+    }
+}

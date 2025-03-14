@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Структура организации - Отделы{% endblock %}
+
+{% block content %}
+<h1>Структура организации</h1>
+<p class="lead">Древовидная структура отделов и сотрудников компании</p>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Структура отделов</h5>
+            </div>
+            <div class="card-body">
+                <div class="department-tree">
+                    {% include 'departments/department_tree.html' with departments=departments %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Информация о структуре</h5>
+            </div>
+            <div class="card-body">
+                <p>В данной структуре представлены отделы компании (до 5 уровней вложенности) и сотрудники, работающие в каждом отделе.</p>
+                <p>Для просмотра подотделов нажмите на иконку "+", для сворачивания - на иконку "-".</p>
+                <p>Чтобы просмотреть список сотрудников отдела, нажмите на кнопку "Сотрудники".</p>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">API</h5>
+            </div>
+            <div class="card-body">
+                <p>Проект также имеет API для интеграции:</p>
+                <ul>
+                    <li><a href="/api/departments/" target="_blank">API Отделов</a></li>
+                    <li><a href="/api/employees/" target="_blank">API Сотрудников</a></li>
+                    <li><a href="/swagger/" target="_blank">Swagger документация</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

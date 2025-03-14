@@ -1,0 +1,29 @@
+<ul>
+    {% for department in departments %}
+    <li class="mb-2">
+        <div class="d-flex align-items-center">
+            {% if not department.is_leaf_node %}
+            <span class="toggle-icon" data-department="{{ department.id }}">
+                <i class="bi bi-plus-square"></i>
+            </span>
+            {% else %}
+            <span class="ms-3"></span>
+            {% endif %}
+
+            <span class="department-name">{{ department.name }}</span>
+
+            <a href="{% url 'departments:department_detail' department.id %}" class="btn btn-sm btn-outline-primary ms-3">
+                Сотрудники
+            </a>
+        </div>
+
+        <div class="subdepartments-{{ department.id }} collapsed mt-2">
+            {% if not department.is_leaf_node %}
+                {% include 'departments/department_tree.html' with departments=department.get_children %}
+            {% endif %}
+        </div>
+    </li>
+    {% empty %}
+    <li>Нет отделов</li>
+    {% endfor %}
+</ul>
